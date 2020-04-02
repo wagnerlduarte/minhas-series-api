@@ -41,5 +41,5 @@ module.exports = {
         const serie = await Serie.create(req.body);
 
         return res.json(serie);
-    }
+    },
 };
