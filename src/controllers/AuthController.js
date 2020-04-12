@@ -1,19 +1,26 @@
-const mongoose = require("mongoose");
+const mongoose = require("../database");
 
 const User = mongoose.model("User");
 
 module.exports = {
   async register(req, res) {
+
+    const { identifier, password } = req.body;
+
     try{
 
-      const { identifier, password } = req.body;
+      if(await User.findOne({identifier})){
+        return res.status(400).send({error: 'User already exists'})
+      }
       
       const user = await User.create({ identifier, password });
       
+      user.password = undefined
+
       return res.send({ user });
     }
     catch(err){
-        return res.status(400).send({error: 'Registration failed'})
+        return res.status(400).send({error: 'Registration failed: ' + err})
     }
   },
 

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('../database');
 const mongoosePaginate = require('mongoose-paginate');
 
 const SerieSchema = new mongoose.Schema({
