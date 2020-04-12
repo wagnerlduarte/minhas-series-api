@@ -6,6 +6,12 @@ const authConfig = require('../config/auth')
 
 const User = mongoose.model('User')
 
+const generateToken = (params = {}) => {
+    return jwt.sign(params, authConfig.secret, {
+        expiresIn: 86400,
+    })
+}
+
 module.exports = {
     async register(req, res) {
         const { identifier, password } = req.body
@@ -19,7 +25,7 @@ module.exports = {
 
             user.password = undefined
 
-            return res.send({ user })
+            return res.send({ user, jwt: generateToken({ id: user.id }) })
         } catch (err) {
             return res
                 .status(400)
@@ -39,13 +45,9 @@ module.exports = {
 
         user.password = undefined
 
-        const token = jwt.sign({ id: user.id }, authConfig.secret, {
-            expiresIn: 86400,
-        })
-
         return res.json({
-            jwt: token,
             user: user,
+            jwt: generateToken({ id: user.id }),
         })
     },
 }
