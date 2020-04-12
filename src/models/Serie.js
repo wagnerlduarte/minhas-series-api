@@ -1,37 +1,37 @@
-const mongoose = require('../database');
-const mongoosePaginate = require('mongoose-paginate');
+const mongoose = require('../database')
+const mongoosePaginate = require('mongoose-paginate')
 
 const SerieSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
     },
     status: {
         type: String,
-        required: true
+        required: true,
     },
     genre: {
         type: String,
-        required: true
+        required: true,
     },
     comments: {
         type: String,
-        required: false
+        required: false,
     },
     rate: {
         type: Number,
-        default: 0
+        default: 0,
     },
     createdAt: {
         type: Date,
-        default: Date.now
-    }
-});
+        default: Date.now,
+    },
+})
 
-SerieSchema.plugin(mongoosePaginate);
+SerieSchema.plugin(mongoosePaginate)
 
 SerieSchema.set('toJSON', {
-    virtuals: true
-});
+    virtuals: true,
+})
 
-mongoose.model('Serie', SerieSchema);
+mongoose.model('Serie', SerieSchema)
