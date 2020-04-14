@@ -1,4 +1,4 @@
-const mongoose = require('../database')
+const mongoose = require('../../database')
 const mongoosePaginate = require('mongoose-paginate')
 
 const ProductSchema = new mongoose.Schema({
