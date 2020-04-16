@@ -18,6 +18,7 @@
     "mongoose": "^5.6.6",
     "mongoose-paginate": "^5.0.3",
     "nodemailer": "^6.4.6",
+    "nodemailer-express-handlebars": "^4.0.0",
     "nodemon": "^1.19.1",
     "require-dir": "^1.2.0"
   }

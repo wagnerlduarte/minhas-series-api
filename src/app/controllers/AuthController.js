@@ -1,6 +1,8 @@
 const mongoose = require('../../database')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
+const mailer = require('../../modules/mailer')
 
 const authConfig = require('../../config/auth')
 
@@ -49,5 +51,49 @@ module.exports = {
             user: user,
             jwt: generateToken({ id: user.id }),
         })
+    },
+
+    async forgot(req, res) {
+        const { identifier } = req.body
+
+        try {
+            const user = await User.findOne({ identifier })
+
+            if (!user) return res.status(400).send({ error: 'User not found' })
+
+            const token = crypto.randomBytes(20).toString('hex')
+
+            const now = new Date()
+
+            now.setHours(now.getHours() + 1)
+
+            await User.findByIdAndUpdate(user.id, {
+                $set: {
+                    passwordResetToken: token,
+                    passwordResetExpires: now,
+                },
+            })
+
+            mailer.sendMail(
+                {
+                    to: identifier,
+                    from: 'no-reply@series.com',
+                    template: 'auth/forgot-password',
+                    context: { token },
+                },
+                (err) => {
+                    if (err)
+                        return res.status(400).send({
+                            error: 'Connot send forgot password email' + err,
+                        })
+
+                    return res.send()
+                }
+            )
+        } catch (err) {
+            return res
+                .status(400)
+                .send({ error: 'Error on forgot password' + err })
+        }
     },
 }
