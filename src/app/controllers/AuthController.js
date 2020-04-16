@@ -53,7 +53,7 @@ module.exports = {
         })
     },
 
-    async forgot(req, res) {
+    async forgotPassword(req, res) {
         const { identifier } = req.body
 
         try {
@@ -93,7 +93,35 @@ module.exports = {
         } catch (err) {
             return res
                 .status(400)
-                .send({ error: 'Error on forgot password' + err })
+                .send({ error: 'Error on forgot password ' + err })
+        }
+    },
+
+    async resetPassword(req, res) {
+        const { identifier, token, password } = req.body
+
+        try {
+            const user = await User.findOne({ identifier }).select(
+                '+passwordResetToken passwordResetExpires'
+            )
+
+            if (!user) return res.status(400).send({ error: 'User not found' })
+
+            if (token.trim() !== user.passwordResetToken.trim())
+                return res.status(400).send({ error: 'Invalid token' })
+
+            if (new Date() > user.passwordResetExpires)
+                return res.status(400).send({ error: 'Expired token' })
+
+            user.password = password
+
+            await user.save()
+
+            res.send()
+        } catch (err) {
+            return res
+                .status(400)
+                .send({ error: 'Error on reset password ' + err })
         }
     },
 }
