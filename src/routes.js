@@ -1,7 +1,8 @@
 const express = require('express')
-const routes = express.Router()
+const authRoutes = express.Router()
+const serieRoutes = express.Router()
 
-require('./app/routes/SerieRoutes')(routes)
-require('./app/routes/AuthRoutes')(routes)
+require('./app/routes/AuthRoutes')(authRoutes)
+require('./app/routes/SerieRoutes')(serieRoutes)
 
-module.exports = routes
+module.exports = [authRoutes, serieRoutes]
