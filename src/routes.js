@@ -1,8 +1,7 @@
-const express = require('express');
-const routes = express.Router();
+const express = require('express')
+const routes = express.Router()
 
-require('./routes/ProductRoutes')(routes);
-require('./routes/SerieRoutes')(routes);
-require('./routes/AuthRoutes')(routes);
+require('./app/routes/SerieRoutes')(routes)
+require('./app/routes/AuthRoutes')(routes)
 
-module.exports = routes;
+module.exports = routes
