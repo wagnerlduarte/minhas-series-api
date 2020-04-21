@@ -1,8 +1,7 @@
-const express = require('express')
-const authRoutes = express.Router()
-const serieRoutes = express.Router()
+const express = require('express');
+const routes = express.Router();
 
-require('./app/routes/AuthRoutes')(authRoutes)
-require('./app/routes/SerieRoutes')(serieRoutes)
+require('./routes/ProductRoutes')(routes);
+require('./routes/SerieRoutes')(routes);
 
-module.exports = [authRoutes, serieRoutes]
+module.exports = routes;
