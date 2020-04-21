@@ -6,7 +6,7 @@ module.exports = {
     async list(req, res) {
         const { page = 1, limit = 10, genre, rate } = req.query
 
-        let filters = {}
+        let filters = { user: req.userId }
 
         if (genre != undefined) filters.genre = genre
 
@@ -18,27 +18,40 @@ module.exports = {
     },
 
     async get(req, res) {
-        const serie = await Serie.findById(req.params.id)
-
-        return res.json(serie)
-    },
-
-    async update(req, res) {
-        const serie = await Serie.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
+        const serie = await Serie.findOne({
+            _id: req.params.id,
+            user: req.userId,
         })
 
         return res.json(serie)
     },
 
+    async update(req, res) {
+        const serie = await Serie.findOneAndUpdate(
+            {
+                _id: req.params.id,
+                user: req.userId,
+            },
+            req.body,
+            {
+                new: true,
+            }
+        )
+
+        return res.json(serie)
+    },
+
     async delete(req, res) {
-        await Serie.findByIdAndDelete(req.params.id)
+        await Serie.findOneAndDelete({
+            _id: req.params.id,
+            user: req.userId,
+        })
 
         return res.send()
     },
 
     async create(req, res) {
-        const serie = await Serie.create(req.body)
+        const serie = await Serie.create({ ...req.body, user: req.userId })
 
         return res.json(serie)
     },
