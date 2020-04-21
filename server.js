@@ -1,13 +1,17 @@
-const express = require('express')
-const cors = require('cors')
-const requireDir = require('require-dir')
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const requireDir = require('require-dir');
 
-const app = express()
-app.use(express.json())
-app.use(cors())
+const app = express();
+app.use(express.json());
+// app.use(cors());
+app.use(cors({origin: 'https://localhost:3000'}));
 
-requireDir('./src/app/models')
+mongoose.connect('mongodb://192.168.99.100:27017/minhas-series', { useNewUrlParser: true })
 
-app.use('/', require('./src/routes'))
+requireDir('./src/models')
 
-app.listen(process.env.PORT || 3001)
+app.use('/', require('./src/routes'));
+
+app.listen(3001);
